@@ -26,11 +26,10 @@ public class Person {
     @Column(nullable = false)
     private String firstname;
 
-    private String lastName; // optional
+    private String lastname; // optional
 
     @NotNull
-    @Column(nullable = false)
-    private LocalDate birthDate;
+    private LocalDate birthdate;
 
     private String note; // optional
 
