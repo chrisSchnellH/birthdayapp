@@ -19,8 +19,10 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     // Find people with a birthday today
     @Query("SELECT p FROM Person p WHERE p.user = :user " +
-            "AND FUNCTION('MONTH', p.birthdate) = FUNCTION('MONTH', CURRENT_DATE) " +
-            "AND FUNCTION('DAY', p.birthdate) = FUNCTION('DAY', CURRENT_DATE)")
-    List<Person> findByUserAndBirthDateMonthAndBirthDateDay(User user);
+            "AND FUNCTION('MONTH', p.birthdate) = :month " +
+            "AND FUNCTION('DAY', p.birthdate) = :day")
+    List<Person> findByUserAndBirthDate(@Param("user") User user,
+                                        @Param("month") int month,
+                                        @Param("day") int day);
 
 }
