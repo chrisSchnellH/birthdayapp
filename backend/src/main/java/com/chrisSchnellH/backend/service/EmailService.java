@@ -70,4 +70,10 @@ public class EmailService {
 
         return message.toString();
     }
+
+    public void sendTestEmail(String to) {
+        String subject = "Test-E-Mail";
+        String message = "<h2>Hallo,</h2><p>Dies ist eine Test-E-Mail vom Geburtstags-Reminder-Service.</p>";
+        sendEmail(to, subject, message);
+    }
 }
