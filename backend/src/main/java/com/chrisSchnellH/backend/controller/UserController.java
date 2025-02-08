@@ -22,17 +22,19 @@ public class UserController {
 
     private final UserService userService;
 
+    // Endpunkt um einen User zu erstellen
     @PostMapping
     ResponseEntity<User> createUser(@RequestBody UserRequest userRequest) {
         User createdUser = userService.createUser(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+    // Endpunkt um alle User zu sehen
     @GetMapping
     public ResponseEntity<Page<UserResponse>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "email") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection) {
 
         Pageable pageable = PageRequest.of(page, size,
@@ -41,22 +43,30 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
+    // Endpunkt um User anhand der Email zu erhalten
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
+    // Endpunkt um User anhand der Id zu erhalten
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         UserResponse userResponse = userService.getUserById(id);
         return ResponseEntity.ok(userResponse);
     }
 
+    // Endpunkt um User zu überarbeiten
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
         UserResponse updatedUser = userService.updateUser(id, userRequest);
         return ResponseEntity.ok(updatedUser);
     }
 
+    // Endpunkt um einen User zu löschen
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
-
 }

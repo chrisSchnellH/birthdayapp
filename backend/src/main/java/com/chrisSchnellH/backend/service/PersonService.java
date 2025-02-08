@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @RequiredArgsConstructor
 public class PersonService {
@@ -24,6 +23,7 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final UserRepository userRepository;
 
+    // Erstellt eine neue Person für einen User
     public PersonResponse createPerson(String email, PersonRequest personRequest) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -39,6 +39,7 @@ public class PersonService {
         return mapToResponse(savedPerson);
     }
 
+    // Aktualisiert eine bestehende Person eines Benutzers
     public PersonResponse updatePerson(String email, Long id, PersonRequest personRequest) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -55,6 +56,7 @@ public class PersonService {
 
     }
 
+    // Löscht eine Person eines Users
     public void deletePerson(String userEmail, Long id) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -66,7 +68,7 @@ public class PersonService {
         personRepository.delete(person);
     }
 
-
+    // Ruft alle Personen eines Benutzers mit Paginierung ab
     public Page<PersonResponse> getAllPersons(String userEmail, int page, int size, String sortBy) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -74,7 +76,7 @@ public class PersonService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return personRepository.findAllByUser(user, pageable).map(this::mapToResponse);
     }
-
+    // Ruft eine einzelne Person anhand ihrer ID ab, sofern sie dem Benutzer gehört
     public PersonResponse getPersonById(String userEmail, Long personId) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -86,6 +88,7 @@ public class PersonService {
         return mapToResponse(person);
     }
 
+    // Wandelt eine Person-Entität in ein Response-Objekt um
     private PersonResponse mapToResponse(Person person) {
         return new PersonResponse(
                 person.getId(),

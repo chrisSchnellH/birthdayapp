@@ -24,6 +24,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    // Authentifiziert den Benutzer anhand der E-Mail und des Passworts und
+    // generiert ein JWT-Token und gibt es in einer AuthResponse zurück
     public AuthResponse authenticate(AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -35,6 +37,7 @@ public class AuthService {
         return new AuthResponse(token);
     }
 
+    // Ändert das Passwort eines Benutzers nach Überprüfung des alten Passworts
     public void changePassword(String email, PasswordChangeRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));

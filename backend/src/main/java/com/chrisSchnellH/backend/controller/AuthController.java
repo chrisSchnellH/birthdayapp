@@ -17,12 +17,14 @@ public class AuthController {
 
     private final AuthService authService;
 
+    // Endpunkt für Anmeldung
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request) {
         AuthResponse response = authService.authenticate(request);
         return ResponseEntity.ok(response);
     }
 
+    // Endpunkt zum Ändern des Passworts
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeRequest request,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {

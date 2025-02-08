@@ -2,16 +2,11 @@ package com.chrisSchnellH.backend.controller;
 
 import com.chrisSchnellH.backend.dto.PersonRequest;
 import com.chrisSchnellH.backend.dto.PersonResponse;
-import com.chrisSchnellH.backend.model.Person;
-import com.chrisSchnellH.backend.model.User;
 import com.chrisSchnellH.backend.security.UserDetailsImpl;
 import com.chrisSchnellH.backend.service.PersonService;
-import com.chrisSchnellH.backend.service.UserDetailsServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,12 +20,14 @@ public class PersonController {
 
     private final PersonService personService;
 
+    // Endpunkt zum Erstellen einer Person
     @PostMapping
     public ResponseEntity<PersonResponse> createPerson(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                        @RequestBody @Valid PersonRequest personRequest) {
         return ResponseEntity.ok(personService.createPerson(userDetails.getUsername(), personRequest));
     }
 
+    // Endpunkt zum Überarbeiten einer Person
     @PutMapping("/{id}")
     public ResponseEntity<PersonResponse> updatePerson(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                           @PathVariable Long id,
@@ -38,6 +35,7 @@ public class PersonController {
         return ResponseEntity.ok(personService.updatePerson(userDetails.getUsername(), id, personRequest));
     }
 
+    // Endpunkt zum Löschen einer Person
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePerson(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                              @PathVariable Long id) {
@@ -45,6 +43,7 @@ public class PersonController {
         return ResponseEntity.noContent().build();
     }
 
+    // Endpunkt um alle Personen eines Users zu erhalten
     @GetMapping
     public ResponseEntity<Page<PersonResponse>> getAllPersons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                  @RequestParam(defaultValue = "0") int page,
@@ -53,6 +52,7 @@ public class PersonController {
         return ResponseEntity.ok(personService.getAllPersons(userDetails.getUsername(), page, size, sortBy));
     }
 
+    // Endpunkt um eine Person eines Users zu erhalten
     @GetMapping("/{id}")
     public ResponseEntity<PersonResponse> getPersonById(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                            @PathVariable Long id) {

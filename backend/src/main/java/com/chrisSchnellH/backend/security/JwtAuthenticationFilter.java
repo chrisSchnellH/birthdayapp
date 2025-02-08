@@ -5,7 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,30 +17,30 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtils jwtTokenProvider;
+    private final JwtUtils jwtTokenProvider;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
 
+    // Überprüft das JWT aus der Anfrage, validiert den Benutzer und setzt die Authentifizierung im SecurityContext
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            // Extract the JWT from the Authorization header (e.g., "Bearer <token>")
+            // Extrahieren des JWT aus dem Authorization-Header (z. B. „Bearer <token>“)
             String jwt = jwtTokenProvider.getJwtFromheader(request);
 
-            // Check if the JWT is not null and validate it
+            // Prüfen, ob das JWT nicht ungültig ist, und es validieren
             if (jwt != null && jwtTokenProvider.validateToken(jwt)) {
                 String username = jwtTokenProvider.getUsernameFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                // If the user details are valid, create an authentication token
+                // Wenn die Benutzerdaten gültig sind, erstellen Sie ein Authentifizierungs-Token
                 if (userDetails != null) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

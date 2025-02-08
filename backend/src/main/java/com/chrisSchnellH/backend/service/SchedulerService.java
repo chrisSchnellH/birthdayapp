@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,22 +23,25 @@ public class SchedulerService {
     private final EmailService emailService;
     private final UserRepository userRepository;
 
-
+    // Task der täglich um 06:00 ausgeführt wird, um Geburtstagsmail zu versenden
     @Scheduled(cron = "0 0 6 * * ?")
     public void sendBirthdayEmails() {
         log.info("Starte Geburtstagsprüfung um 06:00 Uhr!");
 
-        List<User> users = userRepository.findAll();
         LocalDate today = LocalDate.now();
 
-        for (User user : users) {
-            List<Person> birthdayPersons = personRepository.findByUserAndBirthDate(user, today.getMonthValue(), today.getDayOfMonth());
+        // Alle Personen abrufen, die heute Geburtstag haben
+        List<Person> birthdayPersons = personRepository.findByBirthDate(today.getMonthValue(), today.getDayOfMonth());
 
-            if (!birthdayPersons.isEmpty()) {
-                log.info("Sende Geburtstagsbenachrichtung an: {}", user.getEmail());
-                emailService.sendBirthdayNotification(user, birthdayPersons);
-            }
-        }
+        // Gruppieren der Geburtstagskinder nach dem zugehörigen Benutzer
+        Map<User, List<Person>> personsByUser = birthdayPersons.stream()
+                .collect(Collectors.groupingBy(Person::getUser));
+
+        // Für jeden User, der Geburtstagspersonen hat, eine Benachrichtigung senden
+        personsByUser.forEach((user, persons) -> {
+            log.info("Sende Geburtstagsbenachrichtigung an: {}", user.getEmail());
+            emailService.sendBirthdayNotification(user, persons);
+        });
 
         log.info("Geburtstagsprüfung abgeschlossen!");
     }

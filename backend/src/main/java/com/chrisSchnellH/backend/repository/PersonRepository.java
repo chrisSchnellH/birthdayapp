@@ -14,15 +14,12 @@ import java.util.List;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    // Paginated list of the persons of a user
+    // Pagination um alle Personen eines Users zu finden
     Page<Person> findAllByUser(User user, Pageable pageable);
 
-    // Find people with a birthday today
-    @Query("SELECT p FROM Person p WHERE p.user = :user " +
-            "AND FUNCTION('MONTH', p.birthdate) = :month " +
+    // Finde Personen, die heute Geburtstag haben für den Scheduler
+    @Query("SELECT p FROM Person p WHERE FUNCTION('MONTH', p.birthdate) = :month " +
             "AND FUNCTION('DAY', p.birthdate) = :day")
-    List<Person> findByUserAndBirthDate(@Param("user") User user,
-                                        @Param("month") int month,
-                                        @Param("day") int day);
-
+    List<Person> findByBirthDate(@Param("month") int month,
+                                 @Param("day") int day);
 }
