@@ -1,6 +1,22 @@
+// src/layouts/Navbar.tsx
+import { useAuth } from '../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 export const Navbar = () => {
+    const { isLoggedIn, logout } = useAuth(); // Hole den Login-Status und die logout-Funktion aus dem AuthContext
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout(); // Führe die logout-Funktion aus
+        navigate('/'); // Weiterleitung zur Login-Seite
+    };
+
+    const handleLogin = () => {
+        navigate('/'); // Weiterleitung zur Login-Seite
+    };
+
     return (
-        <nav className="navbar navbar-expand-lg bg-primary fixed-top" data-bs-theme="dark">
+        <nav className="navbar navbar-expand-lg bg-primary fixed-top pt-1" data-bs-theme="dark">
             <div className="container-fluid">
                 <a className="navbar-brand" href="#">Birthday App</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,23 +27,25 @@ export const Navbar = () => {
                         <li className="nav-item">
                             <a className="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Link</a>
-                        </li>
-                        <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul className="dropdown-menu">
-                                <li><a className="dropdown-item" href="#">Action</a></li>
-                                <li><a className="dropdown-item" href="#">Another action</a></li>
-                                <li><hr className="dropdown-divider" /></li>
-                                <li><a className="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
+                        {isLoggedIn && ( // Zeige die Personen-Seite nur an, wenn eingeloggt
+                            <li className="nav-item">
+                                <a className="nav-link" href="/persons">Personen</a>
+                            </li>
+                        )}
                     </ul>
+                    <div className="d-flex">
+                        {isLoggedIn ? (
+                            <button onClick={handleLogout} className="btn btn-outline-light">
+                                Logout
+                            </button>
+                        ) : (
+                            <button onClick={handleLogin} className="btn btn-outline-light">
+                                Login
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </nav>
     );
-}
+};
