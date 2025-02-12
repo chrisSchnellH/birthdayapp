@@ -50,3 +50,16 @@ export const createUser = async (userRequest: UserRequest): Promise<UserResponse
         throw new Error('Fehler beim Erstellen des Benutzers');
     }
 };
+
+export const deleteUser = async (id: number): Promise<void> => {
+    try {
+        const token = localStorage.getItem('token'); // Hole das JWT-Token aus dem LocalStorage
+        await axios.delete(`${API_URL}/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Füge das Token zum Header hinzu
+            },
+        });
+    } catch (error) {
+        throw new Error('Fehler beim Löschen des Benutzers');
+    }
+};

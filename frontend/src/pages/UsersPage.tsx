@@ -1,7 +1,7 @@
 // src/pages/admin/UsersPage.tsx
 import { useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
-import { getAllUsers } from '../services/userService';
+import { deleteUser, getAllUsers } from '../services/userService';
 import { useNavigate } from 'react-router-dom';
 
 interface User {
@@ -37,6 +37,17 @@ export const UsersPage = () => {
         fetchUsers();
     }, [isLoggedIn, role, navigate]);
 
+    const handleDelete = async (id: number) => {
+        if (window.confirm('Möchten Sie diesen Benutzer wirklich löschen?')) {
+            try {
+                await deleteUser(id);
+                setUsers(users.filter((user) => user.id !== id)); // Benutzer aus der Liste entfernen
+            } catch (error) {
+                setError('Fehler beim Löschen des Benutzers');
+            }
+        }
+    };
+
     if (loading) {
         return <div>Lade Daten...</div>;
     }
@@ -62,6 +73,7 @@ export const UsersPage = () => {
                     <tr>
                         <th>E-Mail</th>
                         <th>Rolle</th>
+                        <th>Aktionen</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,6 +81,17 @@ export const UsersPage = () => {
                         <tr key={user.id}>
                             <td>{user.email}</td>
                             <td>{user.role}</td>
+                            <td>
+                                <button
+                                    onClick={() => handleDelete(user.id)}
+                                    className="btn btn-danger btn-sm"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash-circle mb-1" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                                    </svg> Löschen
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
