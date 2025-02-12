@@ -3,16 +3,12 @@ import { useAuth } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export const Navbar = () => {
-    const { isLoggedIn, logout } = useAuth(); // Hole den Login-Status und die logout-Funktion aus dem AuthContext
+    const { isLoggedIn, role, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        logout(); // Führe die logout-Funktion aus
-        navigate('/'); // Weiterleitung zur Login-Seite
-    };
-
-    const handleLogin = () => {
-        navigate('/'); // Weiterleitung zur Login-Seite
+        logout();
+        navigate('/');
     };
 
     return (
@@ -27,9 +23,24 @@ export const Navbar = () => {
                         <li className="nav-item">
                             <a className="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
-                        {isLoggedIn && ( // Zeige die Personen-Seite nur an, wenn eingeloggt
+                        {isLoggedIn && (
                             <li className="nav-item">
                                 <a className="nav-link" href="/persons">Personen</a>
+                            </li>
+                        )}
+                        {role === 'ROLE_ADMIN' && (
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin-Bereich
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <li>
+                                        <a className="dropdown-item" href="/admin/users">Users</a>
+                                    </li>
+                                    <li>
+                                        <a className="dropdown-item" href="/admin/logs">Logs</a>
+                                    </li>
+                                </ul>
                             </li>
                         )}
                     </ul>
@@ -39,7 +50,7 @@ export const Navbar = () => {
                                 Logout
                             </button>
                         ) : (
-                            <button onClick={handleLogin} className="btn btn-outline-light">
+                            <button onClick={() => navigate('/')} className="btn btn-outline-light">
                                 Login
                             </button>
                         )}

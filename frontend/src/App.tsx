@@ -6,6 +6,9 @@ import { LoginPage } from './pages/LoginPage';
 import { PersonListPage } from './pages/PersonListPage';
 import { AuthProvider } from './auth/AuthContext';
 import { PersonFormPage } from "./pages/PersonFormPage";
+import { UsersPage } from "./pages/UsersPage";
+import { LogsPage } from "./pages/LogsPage";
+import { UserFormPage } from "./pages/UserFormPage";
 
 export const App = () => {
     return (
@@ -17,6 +20,9 @@ export const App = () => {
                     <Route path="/persons" element={<PersonListPage />} />
                     <Route path="/persons/new" element={<PersonFormPage />} />
                     <Route path="/persons/edit/:id" element={<PersonFormPage />} />
+                    <Route path="/admin/users" element={<UsersPage />} />
+                    <Route path="/admin/users/new" element={<UserFormPage />} />
+                    <Route path="/admin/logs" element={<LogsPage />} />
                 </Routes>
                 <Footer />
             </div>

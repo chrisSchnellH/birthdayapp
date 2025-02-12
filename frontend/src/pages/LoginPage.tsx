@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import { useState } from "react";
 import { useAuth } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -19,11 +18,12 @@ export const LoginPage = () => {
             // API-Aufruf zum Backend
             const response = await login({ email, password });
 
-            // Speichere das Token (z. B. im LocalStorage oder Context)
+            // Speichere das Token und die Rolle im LocalStorage
             localStorage.setItem('token', response.token);
+            localStorage.setItem('role', response.role);
 
-            // Aktualisiere den Login-Status
-            authLogin();
+            // Aktualisiere den Login-Status und die Rolle im AuthContext
+            authLogin(response.token, response.role);
 
             // Weiterleitung zur Personenliste
             navigate('/persons');
