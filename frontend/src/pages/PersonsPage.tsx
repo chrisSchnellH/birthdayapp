@@ -77,7 +77,7 @@ export const PersonListPage = () => {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container">
             <h2>Personenliste</h2>
             <button
                 onClick={() => navigate('/persons/new')}
@@ -166,7 +166,7 @@ export const PersonListPage = () => {
                     ))}
                 </tbody>
             </table>
-            <div className="d-flex justify-content-center mb-5 p-2">
+            <div className="d-flex justify-content-center mb-5">
                 <nav>
                     <ul className="pagination">
                         {Array.from({ length: totalPages }, (_, index) => (

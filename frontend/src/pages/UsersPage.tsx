@@ -14,6 +14,10 @@ export const UsersPage = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [page, setPage] = useState(0); // Aktuelle Seite
+    const [size, setSize] = useState(10); // Anzahl der Elemente pro Seite
+    const [sortBy, setSortBy] = useState('email'); // Sortierung nach Spalte
+    const [totalPages, setTotalPages] = useState(0); // Gesamtanzahl der Seiten
     const { isLoggedIn, role } = useAuth();
     const navigate = useNavigate();
 
@@ -25,8 +29,9 @@ export const UsersPage = () => {
 
         const fetchUsers = async () => {
             try {
-                const data = await getAllUsers();
-                setUsers(data);
+                const data = await getAllUsers(page, size, sortBy);
+                setUsers(data.content);
+                setTotalPages(data.totalPages);
             } catch (error) {
                 setError('Fehler beim Laden der Benutzer - Logout und Login erneut');
             } finally {
@@ -35,7 +40,7 @@ export const UsersPage = () => {
         };
 
         fetchUsers();
-    }, [isLoggedIn, role, navigate]);
+    }, [isLoggedIn, role, navigate, page, size, sortBy]);
 
     const handleDelete = async (id: number) => {
         if (window.confirm('Möchten Sie diesen Benutzer wirklich löschen?')) {
@@ -48,6 +53,20 @@ export const UsersPage = () => {
         }
     };
 
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleSizeChange = (newSize: number) => {
+        setSize(newSize);
+        setPage(0); // Zurück zur ersten Seite, wenn die Größe geändert wird
+    };
+
+    const handleSortChange = (newSortBy: string) => {
+        setSortBy(newSortBy);
+        setPage(0); // Zurück zur ersten Seite, wenn die Sortierung geändert wird
+    };
+
     if (loading) {
         return <div className='container mt-5'>Lade Daten...</div>;
     }
@@ -57,7 +76,7 @@ export const UsersPage = () => {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container">
             <h2>Benutzerliste</h2>
             <button
                 onClick={() => navigate('/admin/users/new')}
@@ -68,6 +87,40 @@ export const UsersPage = () => {
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                 </svg> Neuen Benutzer erstellen
             </button>
+
+            {/* Sortierung und Pagination-Auswahl nebeneinander */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                {/* Sortierung */}
+                <div className="d-flex align-items-center">
+                    <label htmlFor="sortBy" className="form-label me-2 mb-0">Sortieren nach:</label>
+                    <select
+                        id="sortBy"
+                        className="form-select"
+                        value={sortBy}
+                        onChange={(e) => handleSortChange(e.target.value)}
+                    >
+                        <option value="email">E-Mail</option>
+                        <option value="role">Rolle</option>
+                    </select>
+                </div>
+
+                {/* Elemente pro Seite */}
+                <div className="d-flex align-items-center">
+                    <label htmlFor="size" className="form-label me-2 mb-0">Elemente pro Seite:</label>
+                    <select
+                        id="size"
+                        className="form-select"
+                        value={size}
+                        onChange={(e) => handleSizeChange(Number(e.target.value))}
+                    >
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                    </select>
+                </div>
+            </div>
+
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -104,6 +157,22 @@ export const UsersPage = () => {
                     ))}
                 </tbody>
             </table>
+
+            {/* Pagination mittig über der Tabelle */}
+            <div className="d-flex justify-content-center mb-5">
+                <nav>
+                    <ul className="pagination">
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <li key={index} className={`page-item ${page === index ? 'active' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(index)}>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
+
         </div>
     );
 };
