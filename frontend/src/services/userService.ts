@@ -39,7 +39,7 @@ export const getUserById = async (id: number): Promise<UserResponse> => {
 
 export const getAllUsers = async (
     page: number = 0,
-    size: number = 10,
+    size: number = 5,
     sortBy: string = 'email' // Standard-Sortierung nach E-Mail
 ): Promise<ApiResponse> => {
     try {
