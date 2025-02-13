@@ -11,7 +11,7 @@ interface UserResponse {
 
 interface UserRequest {
     email: string;
-    password: string;
+    password?: string;
     role: 'USER' | 'ADMIN';
 }
 
@@ -22,6 +22,20 @@ interface ApiResponse {
     totalPages: number;
     totalElements: number;
 }
+
+export const getUserById = async (id: number): Promise<UserResponse> => {
+    try {
+        const token = localStorage.getItem('token'); // Hole das JWT-Token aus dem LocalStorage
+        const response = await axios.get<UserResponse>(`${API_URL}/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Füge das Token zum Header hinzu
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error('Fehler beim Laden des Benutzers');
+    }
+};
 
 export const getAllUsers = async (): Promise<UserResponse[]> => {
     try {
@@ -61,5 +75,19 @@ export const deleteUser = async (id: number): Promise<void> => {
         });
     } catch (error) {
         throw new Error('Fehler beim Löschen des Benutzers');
+    }
+};
+
+export const updateUser = async (id: number, userRequest: UserRequest): Promise<UserResponse> => {
+    try {
+        const token = localStorage.getItem('token'); // Hole das JWT-Token aus dem LocalStorage
+        const response = await axios.put<UserResponse>(`${API_URL}/${id}`, userRequest, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Füge das Token zum Header hinzu
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error('Fehler beim Aktualisieren des Benutzers');
     }
 };

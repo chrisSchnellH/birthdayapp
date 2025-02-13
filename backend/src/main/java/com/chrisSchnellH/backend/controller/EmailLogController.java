@@ -1,5 +1,6 @@
 package com.chrisSchnellH.backend.controller;
 
+import com.chrisSchnellH.backend.dto.EmailLogResponse;
 import com.chrisSchnellH.backend.model.EmailLog;
 import com.chrisSchnellH.backend.service.EmailLogService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class EmailLogController {
 
     // Endpunkt für alle Logs
     @GetMapping
-    public List<EmailLog> getAllEmailLogs() {
+    public List<EmailLogResponse> getAllEmailLogs() {
         return emailLogService.getAllEmailLogs();
     }
 

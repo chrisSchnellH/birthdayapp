@@ -29,7 +29,7 @@ export const PersonListPage = () => {
                 const data = await getAllPersons();
                 setPersons(data);
             } catch (error) {
-                setError('Fehler beim Laden der Personen');
+                setError('Fehler beim Laden der Personen- Logout und Login erneut');
             } finally {
                 setLoading(false);
             }
@@ -50,11 +50,11 @@ export const PersonListPage = () => {
     };
 
     if (loading) {
-        return <div>Lade Daten...</div>;
+        return <div className='container mt-5'>Lade Daten...</div>;
     }
 
     if (error) {
-        return <div className="alert alert-danger">{error}</div>;
+        return <div className="alert alert-danger mt-5">{error}</div>;
     }
 
     return (

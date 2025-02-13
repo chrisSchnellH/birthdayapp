@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 interface AuthContextType {
     isLoggedIn: boolean;
@@ -10,10 +10,10 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    // Zustand synchron aus dem LocalStorage initialisieren
+
     const [isLoggedIn, setIsLoggedIn] = useState(() => {
         const token = localStorage.getItem('token');
-        return !!token; // true, wenn ein Token vorhanden ist
+        return !!token;
     });
 
     const [role, setRole] = useState<string | null>(() => {
