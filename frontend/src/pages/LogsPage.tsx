@@ -1,7 +1,7 @@
 // src/pages/admin/LogsPage.tsx
 import { useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
-import { getAllEmailLogs } from '../services/logService';
+import { deleteEmailLog, getAllEmailLogs } from '../services/logService';
 import { useNavigate } from 'react-router-dom';
 
 interface EmailLog {
@@ -43,6 +43,17 @@ export const LogsPage = () => {
         fetchLogs();
     }, [isLoggedIn, role, navigate]);
 
+    const handleDelete = async (id: number) => {
+        if (window.confirm('Möchten Sie diesen E-Mail-Log wirklich löschen?')) {
+            try {
+                await deleteEmailLog(id);
+                setLogs(logs.filter(log => log.id !== id));
+            } catch (error) {
+                setError('Fehler beim Löschen des E-Mail-Logs');
+            }
+        }
+    };
+
     if (loading) {
         return <div className='container mt-5'>Lade Daten...</div>;
     }
@@ -57,7 +68,6 @@ export const LogsPage = () => {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Gesendet am</th>
                         <th>Benutzer</th>
                         <th>Empfänger</th>
@@ -68,12 +78,19 @@ export const LogsPage = () => {
                 <tbody>
                     {logs.map((log) => (
                         <tr key={log.id}>
-                            <td>{log.id}</td>
                             <td>{new Date(log.sentAt).toLocaleString()}</td>
                             <td>{log.user.email}</td>
                             <td>{log.recipientEmail}</td>
                             <td>{log.status}</td>
                             <td>{log.errorMessage || '-'}</td>
+                            <td>
+                                <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => handleDelete(log.id)} // Löschfunktion aufrufen
+                                >
+                                    Löschen
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

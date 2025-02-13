@@ -40,5 +40,4 @@ public class EmailLogController {
     public void deleteEmailLog(@PathVariable Long id) {
         emailLogService.deleteEmailLog(id);
     }
-
 }

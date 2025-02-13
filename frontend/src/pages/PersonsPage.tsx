@@ -15,7 +15,11 @@ export const PersonListPage = () => {
     const [persons, setPersons] = useState<Person[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { isLoggedIn } = useAuth(); // Entferne logout, da es nicht mehr benötigt wird
+    const [page, setPage] = useState(0); // Aktuelle Seite
+    const [size, setSize] = useState(10); // Anzahl der Elemente pro Seite
+    const [sortBy, setSortBy] = useState('birthdate'); // Sortierung nach Spalte
+    const [totalPages, setTotalPages] = useState(0); // Gesamtanzahl der Seiten
+    const { isLoggedIn } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,17 +30,18 @@ export const PersonListPage = () => {
 
         const fetchPersons = async () => {
             try {
-                const data = await getAllPersons();
-                setPersons(data);
+                const data = await getAllPersons(page, size, sortBy);
+                setPersons(data.content);
+                setTotalPages(data.totalPages);
             } catch (error) {
-                setError('Fehler beim Laden der Personen- Logout und Login erneut');
+                setError('Fehler beim Laden der Personen - Logout und Login erneut');
             } finally {
                 setLoading(false);
             }
         };
 
         fetchPersons();
-    }, [isLoggedIn, navigate]);
+    }, [isLoggedIn, navigate, page, size, sortBy]);
 
     const handleDelete = async (id: number) => {
         if (window.confirm('Möchten Sie diese Person wirklich löschen?')) {
@@ -47,6 +52,20 @@ export const PersonListPage = () => {
                 setError('Fehler beim Löschen der Person');
             }
         }
+    };
+
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleSizeChange = (newSize: number) => {
+        setSize(newSize);
+        setPage(0); // Zurück zur ersten Seite, wenn die Größe geändert wird
+    };
+
+    const handleSortChange = (newSortBy: string) => {
+        setSortBy(newSortBy);
+        setPage(0); // Zurück zur ersten Seite, wenn die Sortierung geändert wird
     };
 
     if (loading) {
@@ -69,6 +88,43 @@ export const PersonListPage = () => {
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                 </svg> Neue Person erstellen
             </button>
+
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                {/* Sortierung */}
+                <div className="d-flex align-items-center">
+                    <label htmlFor="sortBy" className="form-label me-2 mb-0">Sortieren nach:</label>
+                    <select
+                        id="sortBy"
+                        className="form-select"
+                        value={sortBy}
+                        onChange={(e) => handleSortChange(e.target.value)}
+                    >
+                        <option value="birthdate">Geburtsdatum</option>
+                        <option value="firstname">Vorname</option>
+                        <option value="lastname">Nachname</option>
+                    </select>
+                </div>
+
+                {/* Elemente pro Seite */}
+                <div className="d-flex align-items-center">
+                    <label htmlFor="size" className="form-label me-2 mb-0">Elemente pro Seite:</label>
+                    <select
+                        id="size"
+                        className="form-select"
+                        value={size}
+                        onChange={(e) => handleSizeChange(Number(e.target.value))}
+                    >
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+            {/* Tabelle */}
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -110,6 +166,19 @@ export const PersonListPage = () => {
                     ))}
                 </tbody>
             </table>
+            <div className="d-flex justify-content-center mb-5 p-2">
+                <nav>
+                    <ul className="pagination">
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <li key={index} className={`page-item ${page === index ? 'active' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(index)}>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
         </div>
     );
 };

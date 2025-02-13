@@ -33,11 +33,11 @@ export const UserFormPage = () => {
         setError(null);
 
         try {
-            const userRequest = { email, password, role };
+            const userRequest: { email: string; password?: string; role: 'USER' | 'ADMIN' } = { email, password, role };
             if (id) {
                 // Beim Bearbeiten das Passwort nur senden, wenn es angegeben wurde
                 if (!password) {
-                    delete userRequest?.password; // Passwort aus dem Request entfernen
+                    delete userRequest.password; // Passwort aus dem Request entfernen
                 }
                 await updateUser(parseInt(id), userRequest);
             } else {

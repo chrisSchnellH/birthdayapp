@@ -27,15 +27,20 @@ interface Person {
     note: string;
 }
 
-export const getAllPersons = async (): Promise<PersonResponse[]> => {
+export const getAllPersons = async (
+    page: number = 0,
+    size: number = 5,
+    sortBy: string = 'birthdate'
+): Promise<ApiResponse> => {
     try {
         const token = localStorage.getItem('token'); // Hole das JWT-Token aus dem LocalStorage
         const response = await axios.get<ApiResponse>(API_URL, {
+            params: { page, size, sortBy }, // Pagination- und Sortierungsparameter
             headers: {
                 Authorization: `Bearer ${token}`, // Füge das Token zum Header hinzu
             },
         });
-        return response.data.content; // Extrahiere das `content`-Array
+        return response.data; // Gib das gesamte ApiResponse-Objekt zurück
     } catch (error) {
         throw new Error('Fehler beim Laden der Personen');
     }

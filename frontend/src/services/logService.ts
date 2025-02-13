@@ -27,3 +27,16 @@ export const getAllEmailLogs = async (): Promise<EmailLog[]> => {
         throw new Error('Fehler beim Laden der E-Mail-Logs');
     }
 };
+
+export const deleteEmailLog = async (id: number): Promise<void> => {
+    try {
+        const token = localStorage.getItem('token'); // Hole das JWT-Token aus dem LocalStorage
+        await axios.delete(`${API_URL}/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Füge das Token zum Header hinzu
+            },
+        });
+    } catch (error) {
+        throw new Error('Fehler beim Löschen des E-Mail-Logs');
+    }
+};

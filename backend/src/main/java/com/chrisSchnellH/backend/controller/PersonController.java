@@ -47,7 +47,7 @@ public class PersonController {
     @GetMapping
     public ResponseEntity<Page<PersonResponse>> getAllPersons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                  @RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size,
+                                                                 @RequestParam(defaultValue = "5") int size,
                                                                  @RequestParam(defaultValue = "birthdate") String sortBy) {
         return ResponseEntity.ok(personService.getAllPersons(userDetails.getUsername(), page, size, sortBy));
     }
