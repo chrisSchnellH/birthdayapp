@@ -58,7 +58,6 @@ public class PersonController {
                                                            @PathVariable Long id) {
         return ResponseEntity.ok(personService.getPersonById(userDetails.getUsername(), id));
     }
-
 }
 
 
