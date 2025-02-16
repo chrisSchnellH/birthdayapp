@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/admin/users'; // Backend-URL
+const API_URL = import.meta.env.VITE_API_URL_ADMIN_USERS; // Backend-URL
 
 interface UserResponse {
     id: number;

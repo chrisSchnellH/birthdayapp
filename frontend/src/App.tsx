@@ -9,15 +9,17 @@ import { PersonFormPage } from "./pages/PersonFormPage";
 import { UsersPage } from "./pages/UsersPage";
 import { LogsPage } from "./pages/LogsPage";
 import { UserFormPage } from "./pages/UserFormPage";
+import LandingPage from "./pages/LandingPage";
 
 export const App = () => {
     return (
         <AuthProvider>
             <div className="d-flex flex-column min-vh-100">
                 <Navbar />
-                <div className="mt-5 flex-grow-1"> {/* mt-5 fügt einen oberen Abstand hinzu */}
+                <div className="flex-grow-1">
                     <Routes>
-                        <Route path="/" element={<LoginPage />} />
+                        <Route path="/" element={<LandingPage />} />
+                        <Route path="/login" element={<LoginPage />} />
                         <Route path="/persons" element={<PersonListPage />} />
                         <Route path="/persons/new" element={<PersonFormPage />} />
                         <Route path="/persons/edit/:id" element={<PersonFormPage />} />

@@ -26,7 +26,7 @@ export const LoginPage = () => {
             authLogin(response.token, response.role);
 
             // Weiterleitung zur Personenliste
-            navigate('/persons');
+            navigate('/');
         } catch (error) {
             setError('Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.');
         }

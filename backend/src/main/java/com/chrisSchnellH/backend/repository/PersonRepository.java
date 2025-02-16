@@ -18,8 +18,9 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     Page<Person> findAllByUser(User user, Pageable pageable);
 
     // Finde Personen, die heute Geburtstag haben für den Scheduler
-    @Query("SELECT p FROM Person p WHERE FUNCTION('MONTH', p.birthdate) = :month " +
-            "AND FUNCTION('DAY', p.birthdate) = :day")
+    @Query("SELECT p FROM Person p " +
+            "WHERE EXTRACT(MONTH FROM p.birthdate) = :month " +
+            "AND EXTRACT(DAY FROM p.birthdate) = :day")
     List<Person> findByBirthDate(@Param("month") int month,
                                  @Param("day") int day);
 }

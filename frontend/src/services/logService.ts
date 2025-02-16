@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/email-logs'; // Backend-URL
+const API_URL = import.meta.env.VITE_API_URL_EMAIL_LOGS; // Backend-URL
 
 interface EmailLog {
     id: number;

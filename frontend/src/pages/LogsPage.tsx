@@ -63,7 +63,7 @@ export const LogsPage = () => {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 mb-5">
             <h2>E-Mail-Logs</h2>
             <table className="table table-striped">
                 <thead>

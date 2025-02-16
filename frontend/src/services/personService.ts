@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/persons'; // Backend-URL
+const API_URL = import.meta.env.VITE_API_URL_PERSONS; // Backend-URL
 
 interface PersonResponse {
     id: number;

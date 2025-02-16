@@ -16,7 +16,7 @@ export const PersonListPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [page, setPage] = useState(0); // Aktuelle Seite
-    const [size, setSize] = useState(10); // Anzahl der Elemente pro Seite
+    const [size, setSize] = useState(5); // Anzahl der Elemente pro Seite
     const [sortBy, setSortBy] = useState('birthdate'); // Sortierung nach Spalte
     const [totalPages, setTotalPages] = useState(0); // Gesamtanzahl der Seiten
     const { isLoggedIn } = useAuth();
@@ -77,7 +77,7 @@ export const PersonListPage = () => {
     }
 
     return (
-        <div className="container">
+        <div className="container mt-5">
             <h2>Personenliste</h2>
             <button
                 onClick={() => navigate('/persons/new')}

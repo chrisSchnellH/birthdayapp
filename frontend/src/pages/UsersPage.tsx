@@ -15,7 +15,7 @@ export const UsersPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [page, setPage] = useState(0); // Aktuelle Seite
-    const [size, setSize] = useState(10); // Anzahl der Elemente pro Seite
+    const [size, setSize] = useState(5); // Anzahl der Elemente pro Seite
     const [sortBy, setSortBy] = useState('email'); // Sortierung nach Spalte
     const [totalPages, setTotalPages] = useState(0); // Gesamtanzahl der Seiten
     const { isLoggedIn, role } = useAuth();
@@ -76,7 +76,7 @@ export const UsersPage = () => {
     }
 
     return (
-        <div className="container">
+        <div className="container mt-5">
             <h2>Benutzerliste</h2>
             <button
                 onClick={() => navigate('/admin/users/new')}
