@@ -11,6 +11,8 @@ import { LogsPage } from "./pages/LogsPage";
 import { UserFormPage } from "./pages/UserFormPage";
 import LandingPage from "./pages/LandingPage";
 
+
+
 export const App = () => {
     return (
         <AuthProvider>

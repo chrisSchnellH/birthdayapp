@@ -1,6 +1,6 @@
 // src/layouts/Navbar.tsx
 import { useAuth } from '../auth/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const Navbar = () => {
     const { isLoggedIn, role, logout } = useAuth();
@@ -21,24 +21,24 @@ export const Navbar = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="/">Home</a>
+                            <Link className="nav-link active" aria-current="page" to="/">Home</Link>
                         </li>
                         {isLoggedIn && (
                             <li className="nav-item">
-                                <a className="nav-link" href="/persons">Personen</a>
+                                <Link className="nav-link" to="/persons">Personen</Link>
                             </li>
                         )}
                         {role === 'ROLE_ADMIN' && (
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <Link className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Admin-Bereich
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <a className="dropdown-item" href="/admin/users">Users</a>
+                                        <Link className="dropdown-item" to="/admin/users">Users</Link>
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="/admin/logs">Logs</a>
+                                        <Link className="dropdown-item" to="/admin/logs">Logs</Link>
                                     </li>
                                 </ul>
                             </li>
